@@ -25,9 +25,9 @@ public interface PebbleBag {
      * <p>
      * This method places the pebble randomly in the PabbleBag
      * 
-     * @param pebble Pebble to be put into the PebbleBag
+     * @param i
      */
-    public void put(Pebble pebble);
+    public void put(Integer i);
 
     /**
      * Method returns a random Pebble.
@@ -36,33 +36,5 @@ public interface PebbleBag {
      * 
      * @return the pebble removed from the PebbleBag
      */
-    public Pebble remove();
-
-
-    /**
-     * Method checks if the bag totals 100.
-     * <p>
-     * This method returns whether the bag totals a weight of 100
-     * 
-     * @param pebble to be checked against
-     * @return whether the bag totals 100
-     */
-    public boolean totals100(Pebble pebble);
-
-    /**
-     * Method checks if there are any pebbles in the bag.
-     * 
-     * @return whether there are any pebbles in the bag
-     */
-    public boolean isEmpty();
-    
-    /**
-     * Method checks if a bag is valid for the specifications provided
-     * 
-     * @return whether a bag is valid 
-     */
-    public boolean isValid();
-    
-    
-   
+    public Integer remove();
 }

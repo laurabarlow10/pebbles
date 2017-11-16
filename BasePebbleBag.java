@@ -1,8 +1,6 @@
 package pebbles;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * An implementation of CardDeck which uses recursion similar to 
@@ -13,19 +11,19 @@ import java.util.Map;
  */
 public class BasePebbleBag implements PebbleBag {
     
-    final private ArrayList<Pebble> PebbleBag;
+    final private ArrayList<Integer> PebbleBag;
     
     /**
      * Method initializes an empty BaseCardDeck
      */
-    public BasePebbleBag() {
-        PebbleBag = new ArrayList();
+    public BasePebbleBag(ArrayList<Integer> weights) {
+        PebbleBag = weights;
     }
     
     /**
      * {@inheritDoc}
      */
-    @Override                             
+    @Override
     public synchronized int size() {
         return PebbleBag.size();
     }
@@ -33,95 +31,47 @@ public class BasePebbleBag implements PebbleBag {
     /**
      * {@inheritDoc}
      */
+    
     @Override
-    public synchronized void put(Pebble pebble) {
-        PebbleBag.add(pebble);
+    public synchronized void put(Integer i) {
+        PebbleBag.add(i);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public synchronized Pebble remove() {
+    public synchronized Integer remove() {
         if(PebbleBag.isEmpty()){  
             //need to add from white bag to refil not throw exception??
+            //return zero to indicate that bag is empty so we can do above
             throw new IllegalStateException("Can't dequeue an empty deck");         
         }       
         int rando = (int)((Math.random()*PebbleBag.size()));
-        Pebble pebble = PebbleBag.remove(rando);         
+        Integer i = PebbleBag.remove(rando);         
         
-        return pebble;
-    }
-    
-    /**
-     * {@inheritDoc}
-    
-    @Override
-    public synchronized Card getHead() {
-        if(deck.isEmpty()){             
-            throw new IllegalStateException("Can't get head of an empty deck");         
-        }         
-                
-        return deck.getFirst();
-    }
-     */
-    
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean totals100(PebbleBag pebbleBag) {
-        if(isEmpty()) {
-            return false;
-        }
-        int total = new int 0;
-        for (int i=0; i < PebbleBag.size(); i++) { 
-            
-            total += (int)(Pebble.getWeight());                     
-                         //need comparable to be an int to sum
-                         //if not 100 return false
-                         
-            }             
-        }
-
-    @Override
-    public boolean totals100(Pebble pebble) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return i;
     }
 
-    @Override
-    public synchronized boolean isEmpty() { //synchronized
+    public boolean isEmpty() {
         return PebbleBag.isEmpty();
     }
 
-    @Override
-    public synchronized boolean isValid() {
-        if pebbleBag.size() > 11*
-    }
-
-        return true;
-    }
-   
-
-    
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean isValid() {
-    //positive integers, comma separated, contains minimum 11*no of players
-    //comma separated regex check done when read in 
-        Map<Pebble, Integer> m = new HashMap();
-        
-        for (int i=0; i < PebbleBag.size(); i++) {   
-            
-            if(0 < i < 92) {
-            //contains minimum 11*no of players need to access command line input for no of players??
-                return true;
+    public boolean isValid(int numPlayers) {
+        int size = PebbleBag.size();
+        if (size != numPlayers * 11) { //Bag size must be 11 times number of players on startup.
+            return false;
+        }
+        //positive integers, comma separated, contains minimum 11*no of players
+        //comma separated regex check done when read in 
+        for (int i=0; i < size; i++) {   
+            if(0 > i) {
+                //contains minimum 11*no of players need to access command line input for no of players??
+                return false;
             }        
         }
-        
-        return false;
+
+         return true;
     }
     
 }

@@ -13,14 +13,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 public class BasePlayer implements Player {
     final private int id;
-    final private PebbleBag hand;
-    final private PebbleBag give;
-    final private PebbleBag take;
-    final private PebbleBag lastBag;
-    final private PebbleBag discardWeight;
+    final private BasePlayerHand hand;
+    final private BasePebbleBag[] table;
     
     
-    final private AtomicBoolean isDone;
     final private CyclicBarrier startingGate;
             
     /**
@@ -35,14 +31,10 @@ public class BasePlayer implements Player {
      * @param isDone a flag to alert all players when a win has been reached
      * @param startingGate a gate to allow all players to start at once
      */
-    public BasePlayer(int id,PebbleBag take,PebbleBag give, PebbleBag discardWeight, PebbleBag lastBag, AtomicBoolean isDone, CyclicBarrier startingGate) {
+    public BasePlayer(int id, BasePebbleBag[] table, CyclicBarrier startingGate) {
         this.id = id;
-        hand = new BasePebbleBag();
-        this.give = give;
-        this.take = take;
-        this.lastBag = lastBag;
-        this.isDone = isDone;
-        this.discardWeight = discardWeight;
+        hand = new BasePlayerHand();
+        this.table = table;
         this.startingGate = startingGate;
     }
     
@@ -50,8 +42,8 @@ public class BasePlayer implements Player {
      * {@inheritDoc}
      */
     @Override
-    public void addPebble(Pebble pebble) {
-        hand.put(pebble);
+    public void addPebble(Integer i) {
+        hand.put(i);
         checkDoneCondition();
     }
     
@@ -60,23 +52,12 @@ public class BasePlayer implements Player {
      */
     @Override
     public boolean checkDoneCondition() {
-        //change so that player bag is different to bags on the table as have different methods, can both extend pebblebag
         if(hand.totals100()) {
-            if (isDone.compareAndSet(false, true)) {
+                //launch inturupt. google it
                 System.out.println("Player "+id+" wins");
                 return true;
-            }
         }
         return false;
-    }
-    
-    private void discardPebble() {
-        
-        output.remove(hand.remove());
-    } 
-    
-    private void takeCard() {
-        hand.enqueue(input.dequeue());
     }
     
     /**
@@ -86,28 +67,18 @@ public class BasePlayer implements Player {
     public void run() {
         try {
             startingGate.await();
+            //Where each players loop runs
+            //Got 9 pebbles
+            //Draw pebble
+            //check if 100
+            //discard pebble
+            //if 100 -> win and inturupt other threads.
         }  catch (InterruptedException | BrokenBarrierException e) {
             return;
         }
         
-        while(!isDone.get()) {
-            if(input.isEmpty()) {
-                continue;
-            }
-            
-            try {
-                takeCard();
-            } catch (IllegalStateException e) {
-                throw new RuntimeException("input was empty: "+e);
-            }
-            
-            while(hand.getHead().getNumber().equals(id)) {
-                hand.enqueue(hand.dequeue());
-            }
-            discardCard();
-            
-            checkDoneCondition();
-        }
+        //gets done if interrupted, eg gracefully shut down game
+         checkDoneCondition();
     }
     
 }

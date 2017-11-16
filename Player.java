@@ -20,7 +20,7 @@ public interface Player extends Runnable {
      * 
      * @param pebble Pebble to be added to the players hand
      */
-    public void addPebble(Pebble pebble);
+    public void addPebble(Integer i);
 
     /**
      * Method checks held pebbles to see if met defined condition
@@ -31,8 +31,5 @@ public interface Player extends Runnable {
      * @return whether the pebbles held equal a winning condition
      */
     public boolean checkDoneCondition();
-    
-    public void removePebble(Pebble pebble);
-    
     
 }
